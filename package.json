@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
     "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate deploy"
+    "prisma:migrate": "prisma migrate deploy",
+    "build": "prisma generate && prisma migrate deploy && next build",
+    "dev": "next dev",
+    "start": "next start"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
