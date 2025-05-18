@@ -11,7 +11,8 @@
     "itemList": "Item List",
     "restrurent": "Restaurant",
     "tableList": "Table List",
-    "statement": "Statement"
+    "statement": "Statement",
+    "settings": "Settings"
   },
   "signIn": {
     "title": "Sign In",

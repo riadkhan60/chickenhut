@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { BookOpen, Map, PieChart, SquareTerminal } from 'lucide-react';
+import { BookOpen, Map, PieChart, Settings, SquareTerminal } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import { NavMain } from '@/components/Dashboard/nav-main';
@@ -66,6 +66,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       title: t('statement'),
       url: '/dashboard/statement',
       icon: PieChart,
+      isActive: true,
+    },
+    {
+      title: t('settings'),
+      url: '/dashboard/settings',
+      icon: Settings,
       isActive: true,
     },
   ];

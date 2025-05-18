@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -21,6 +21,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import Image from 'next/image';
+import { PinContext } from '@/context/PinContext';
 
 interface MenuItem {
   id: number;
@@ -40,6 +41,7 @@ function ItemList() {
   const [editImagePreview, setEditImagePreview] = useState<string | null>(null);
   const [editUploading, setEditUploading] = useState(false);
   const [editUploadError, setEditUploadError] = useState<string | null>(null);
+  const { adminModeOn } = useContext(PinContext);
 
   const fetchItems = async () => {
     setLoading(true);
@@ -210,6 +212,7 @@ function ItemList() {
               <div className="flex gap-2 mt-auto">
                 <Button
                   variant="outline"
+                  disabled={!adminModeOn}
                   size="sm"
                   onClick={() => setEditItem(item)}
                 >
@@ -217,6 +220,7 @@ function ItemList() {
                 </Button>
                 <Button
                   variant="destructive"
+                  disabled={!adminModeOn}
                   size="sm"
                   onClick={() => setDeleteId(item.id)}
                 >

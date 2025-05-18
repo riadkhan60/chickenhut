@@ -51,6 +51,7 @@ model Order {
   orderItems      OrderItem[]
   kitchenPrinted  Boolean     @default(false)
   customerPrinted Boolean     @default(false)
+  sendStatement   Boolean     @default(false)
 }
 
 model OrderItem {

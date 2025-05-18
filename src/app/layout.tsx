@@ -6,6 +6,7 @@ import LanguageChangeBtn from '@/components/languageChangeBtn';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import { Toaster } from 'sonner';
+import { PinProvider } from '@/context/PinContext';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -33,13 +34,15 @@ export default async function RootLayout({
     <html lang={locale}>
       <NextIntlClientProvider messages={messages}>
         <SessionProviderWrapper>
-          <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-          >
-            {children}
-            <LanguageChangeBtn />
-            <Toaster />
-          </body>
+          <PinProvider>
+            <body
+              className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+            >
+              {children}
+              <LanguageChangeBtn />
+              <Toaster />
+            </body>
+          </PinProvider>
         </SessionProviderWrapper>
       </NextIntlClientProvider>
     </html>

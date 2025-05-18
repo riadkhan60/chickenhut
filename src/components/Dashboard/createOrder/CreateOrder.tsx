@@ -762,7 +762,7 @@ export default function CreateOrder({
                 (!isParcel && !tableId && !tableInput.trim()) ||
                 (!!hasOngoingOrderForTable && !isEditing)
               }
-              className="flex-1 sm:flex-none text-lg py-3"
+              className="flex-1 sm:flex-none text-lg h-20 py-3"
               aria-label={isEditing ? 'Update Order' : 'Save Ord aer'}
             >
               {isSubmitting && actionInProgress === 'create' ? (
@@ -781,7 +781,7 @@ export default function CreateOrder({
                   items.length === 0 ||
                   (!!hasOngoingOrderForTable && !isEditing)
                 }
-                className="flex-1 sm:flex-none text-lg py-3"
+                className="flex-1 sm:flex-none text-lg py-3 h-20 bg-yellow-300"
                 aria-label="Print Kitchen Order"
                 title={t('printKitchenTitle')}
               >
@@ -800,7 +800,7 @@ export default function CreateOrder({
                 items.length === 0 ||
                 (!!hasOngoingOrderForTable && !isEditing)
               }
-              className="flex-1 sm:flex-none text-lg py-3"
+              className="flex-1 sm:flex-none text-lg py-3 h-20 "
               aria-label="Print Customer Bill"
               title={t('printCustomerBillTitle')}
             >

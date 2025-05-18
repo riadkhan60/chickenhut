@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -16,6 +16,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { toast } from 'sonner';
+import { PinContext } from '@/context/PinContext';
 
 interface MenuItemFormValues {
   name: string;
@@ -29,6 +30,8 @@ export function MenuItemForm({ onItemAdded }: { onItemAdded?: () => void }) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const { adminModeOn } = useContext(PinContext);
 
   const form = useForm<MenuItemFormValues>({
     defaultValues: {
@@ -208,7 +211,7 @@ export function MenuItemForm({ onItemAdded }: { onItemAdded?: () => void }) {
           <Button
             type="submit"
             className="w-full"
-            disabled={isSubmitting || uploading}
+            disabled={isSubmitting || uploading || !adminModeOn}
           >
             {isSubmitting || uploading ? 'Adding...' : 'Add Item'}
           </Button>

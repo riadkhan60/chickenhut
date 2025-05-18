@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import { PinContext } from '@/context/PinContext';
 
 interface Table {
   id: number;
@@ -32,6 +33,7 @@ function TableList() {
   const [loading, setLoading] = useState(true);
   const [editTable, setEditTable] = useState<Table | null>(null);
   const [deleteId, setDeleteId] = useState<number | null>(null);
+  const { adminModeOn } = useContext(PinContext);
 
   const fetchTables = async () => {
     setLoading(true);
@@ -126,7 +128,9 @@ function TableList() {
                 </FormItem>
               )}
             />
-            <Button type="submit">Add</Button>
+            <Button type="submit" disabled={!adminModeOn}>
+              Add
+            </Button>
           </form>
         </Form>
       </Card>
@@ -154,6 +158,7 @@ function TableList() {
               <div className="flex gap-2 mt-auto">
                 <Button
                   variant="outline"
+                  disabled={!adminModeOn}
                   size="sm"
                   onClick={() => setEditTable(table)}
                 >
@@ -161,6 +166,7 @@ function TableList() {
                 </Button>
                 <Button
                   variant="destructive"
+                  disabled={!adminModeOn}
                   size="sm"
                   onClick={() => setDeleteId(table.id)}
                 >
