@@ -138,7 +138,7 @@ export default function OngoingOrdersList({
                 )}
               </div>
               <div className="font-bold mt-auto pt-2 text-right text-base sm:text-lg text-gray-700 dark:text-gray-200">
-                {t('total')}: ${Number(order.total).toFixed(2)}
+                {t('total')}: tk{Number(order.total).toFixed(2)}
               </div>
             </Card>
           ))

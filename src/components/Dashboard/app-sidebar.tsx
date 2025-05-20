@@ -60,6 +60,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           title: t('tableList'),
           url: '/dashboard/table-list',
         },
+        {
+          title: t('billingHistory'),
+          url: '/dashboard/billing-history',
+        },
       ],
     },
     {

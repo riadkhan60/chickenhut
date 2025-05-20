@@ -28,9 +28,9 @@ export default function CreateBillPage() {
   }, []);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 p-4 sm:p-6 lg:p-8 min-h-screen overflow-hidden bg-slate-50 dark:bg-slate-900">
+    <div className="flex flex-col lg:flex-row gap-6  min-h-screen overflow-hidden bg-slate-50 dark:bg-slate-900">
       <div
-        className="flex-1 lg:max-w-xl xl:max-w-2xl flex flex-col"
+        className="flex-1  flex flex-col"
         id="create-order-section"
       >
         <div className="flex-1 min-h-0">

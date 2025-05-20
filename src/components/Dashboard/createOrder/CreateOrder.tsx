@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react'; // For loading indicators
+import { Trash } from 'lucide-react';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -61,6 +62,7 @@ export default function CreateOrder({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [actionInProgress, setActionInProgress] = useState<string | null>(null);
   const [isParcel, setIsParcel] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [prevTableInput, setPrevTableInput] = useState('');
 
   // Refs for focus management
@@ -143,8 +145,10 @@ export default function CreateOrder({
             order.status === 'ONGOING',
         );
         if (hasOngoing) {
-          toast.error('This table already has an ongoing order.');
-          setTableInput(prevTableInput); // revert
+          // Just set the input, don't show toast or revert
+          setTableInput(val);
+          setTableId(foundTable.id);
+          setPrevTableInput(val);
           return;
         } else {
           setTableInput(val);
@@ -491,12 +495,6 @@ export default function CreateOrder({
           </span>
         )}
       </h2>
-      {!isEditing && hasOngoingOrderForTable && (
-        <div className="mb-4 p-2 bg-red-100 text-red-700 rounded text-sm">
-          There is already an ongoing order for this table. Please complete the
-          previous order before creating a new one.
-        </div>
-      )}
       <div className="space-y-4">
         {/* Parcel Checkbox */}
         <div className="flex items-center mb-2">
@@ -541,7 +539,9 @@ export default function CreateOrder({
                 isSubmitting ||
                 isLoadingTables
               }
-              className="transition-colors duration-200 text-lg p-2"
+              className={`transition-colors duration-200 text-lg p-2 ${
+                hasOngoingOrderForTable ? 'bg-red-100 border-red-500' : ''
+              }`}
               aria-label="Table number"
               title="Type or select the table number for this order"
             />
@@ -641,6 +641,17 @@ export default function CreateOrder({
             <h3 className="font-semibold text-gray-700 dark:text-gray-300">
               {t('orderItems')}
             </h3>
+            {/* Header Row */}
+            <div className="hidden sm:flex flex-row items-center gap-2 px-2 py-1 font-semibold text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 text-sm">
+              <div className="w-12 text-center text-xs whitespace-nowrap">
+                Item No
+              </div>
+              <div className="flex-1 min-w-0">Item Name</div>
+              <div className="w-24 text-center">Quantity</div>
+              <div className="w-28 text-right">Price</div>
+              <div className="w-14"></div>
+            </div>
+            {/* End Header Row */}
             {items.map((item, index) => (
               <div
                 key={item.menuItemId}
@@ -653,15 +664,15 @@ export default function CreateOrder({
                     : 'bg-white dark:bg-gray-700/50 border'
                 }`}
               >
+                <div className="w-12 text-center font-mono text-gray-700 dark:text-gray-200">
+                  {item.itemNumber}
+                </div>
                 <div className="flex-1 min-w-0">
                   <span className="font-medium text-gray-800 dark:text-gray-100">
                     {item.name}
                   </span>
-                  <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
-                    (#{item.itemNumber})
-                  </span>
                 </div>
-                <div className="flex items-center gap-2 w-full sm:w-auto">
+                <div className="w-24 flex items-center justify-center">
                   <label
                     htmlFor={`quantity-${item.menuItemId}`}
                     className="sr-only"
@@ -673,7 +684,7 @@ export default function CreateOrder({
                     type="number"
                     min={1}
                     aria-label={`Quantity for ${item.name}`}
-                    className="w-24 border rounded p-2 text-center text-lg focus:ring-2 focus:ring-primary dark:bg-gray-600 dark:text-white"
+                    className="w-full border rounded p-2 text-center text-lg focus:ring-2 focus:ring-primary dark:bg-gray-600 dark:text-white"
                     value={item.quantity}
                     disabled={isEffectivelyCompleted || isSubmitting}
                     onChange={(e) =>
@@ -689,43 +700,23 @@ export default function CreateOrder({
                       itemQuantityInputRefs.current[index] = el;
                     }}
                   />
-                  <label
-                    htmlFor={`price-${item.menuItemId}`}
-                    className="sr-only"
-                  >
-                    Price for {item.name}
-                  </label>
-                  <Input
-                    id={`price-${item.menuItemId}`}
-                    type="number"
-                    min={0}
-                    step={0.01}
-                    aria-label={`Price for ${item.name}`}
-                    className="w-28 border rounded p-2 text-right text-lg focus:ring-2 focus:ring-primary dark:bg-gray-600 dark:text-white"
-                    value={item.price.toFixed(2)}
-                    disabled={isEffectivelyCompleted || isSubmitting}
-                    onChange={(e) =>
-                      handleItemChange(
-                        item.menuItemId,
-                        'price',
-                        Number(e.target.value),
-                      )
-                    }
-                    onFocus={(e) => e.target.select()}
-                  />
-                  {!isEffectivelyCompleted && !isSubmitting && (
+                </div>
+                <div className="w-28 text-right font-mono text-lg text-gray-800 dark:text-gray-100">
+                  {item.price.toFixed(2)}
+                </div>
+                {!isEffectivelyCompleted && !isSubmitting && (
+                  <div className="w-14 flex justify-end">
                     <Button
-                      size="sm"
-                      variant="ghost"
-                      className="text-red-500 hover:bg-red-100 dark:hover:bg-red-700/50 text-lg"
+                      size="icon"
+                      className="bg-red-600 hover:bg-red-700 text-white"
                       onClick={() => handleRemoveItem(item.menuItemId)}
                       aria-label={`Remove ${item.name}`}
                       title="Remove item from order"
                     >
-                      Remove
+                      <Trash className="w-5 h-5" />
                     </Button>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
