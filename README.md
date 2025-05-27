@@ -34,10 +34,19 @@ ChikenHut is a full-stack restaurant management system that provides:
 ### Core Features
 
 - **Order Management**: Create, track, and complete orders
-- **Menu Management**: Add, edit, and manage menu items
+- **Menu Management**: Add, edit, and manage menu items with item numbers
 - **Table Management**: Organize restaurant tables and assignments
 - **Real-time Updates**: Live order status updates
 - **User Authentication**: Secure login system with NextAuth.js
+
+### 🖨️ Thermal Printer Integration
+
+- **Kitchen Orders**: API endpoint for printing kitchen orders with large fonts and item numbers
+- **Customer Receipts**: API endpoint for professional receipts with logo and itemized billing
+- **Statement Printing**: API endpoint for daily/periodic statement printing
+- **Dual Print Types**: Separate API calls for kitchen vs customer print formats
+- **Auto-completion**: Orders automatically marked as completed after customer print
+- **External Print Server**: Integrates with external thermal printer API service
 
 ### Automation Features
 
@@ -309,6 +318,8 @@ You can manually add initial data through Prisma Studio or pgAdmin:
    ```
    Service runs on: `http://localhost:3006`
 
+**Note**: For thermal printing functionality, ensure your external thermal printer API server is running and accessible.
+
 ### Production Mode
 
 1. **Build the application:**
@@ -354,14 +365,72 @@ You can manually add initial data through Prisma Studio or pgAdmin:
 
 ### Main Application
 
+#### Menu Management
+
 - `GET /api/menu-item` - Get all menu items
 - `POST /api/menu-item` - Create new menu item
+- `PUT /api/menu-item/[id]` - Update menu item
+- `DELETE /api/menu-item/[id]` - Delete menu item
+
+#### Order Management
+
 - `GET /api/order` - Get all orders
 - `POST /api/order` - Create new order
+- `PUT /api/order/[id]` - Update order
+- `DELETE /api/order/[id]` - Delete order
+- `GET /api/order/billing-history` - Get billing history
+
+#### Order Items
+
+- `GET /api/order-item` - Get all order items
+- `POST /api/order-item` - Create order item
+- `PUT /api/order-item/[id]` - Update order item
+- `DELETE /api/order-item/[id]` - Delete order item
+
+#### Table Management
+
 - `GET /api/table` - Get all tables
 - `POST /api/table` - Create new table
+- `PUT /api/table/[id]` - Update table
+- `DELETE /api/table/[id]` - Delete table
 
-### Backup Service
+#### User Management
+
+- `GET /api/user` - Get all users
+- `POST /api/user` - Create new user
+- `GET /api/user/[id]` - Get user by ID
+- `PUT /api/user/[id]` - Update user
+- `DELETE /api/user/[id]` - Delete user
+
+#### Authentication
+
+- `POST /api/auth/[...nextauth]` - NextAuth.js authentication endpoints
+- `GET /api/auth/session` - Get current session
+- `POST /api/auth/signin` - Sign in
+- `POST /api/auth/signout` - Sign out
+
+#### 🖨️ Thermal Printer Integration
+
+- `POST /api/print-route` - Send print request to external thermal printer API
+  - **Body**: `{ orderId: number, type: "kitchen" | "customer" }`
+  - **Kitchen Print**: Sends kitchen order data with item numbers for large font printing
+  - **Customer Print**: Sends detailed receipt data with logo, items, totals, address
+- `POST /api/print-route/print-bill` - Send statement/bill print request
+  - **Body**: `{ statement: { date: string, totalSale: number, totalOrders: number } }`
+  - **Note**: These endpoints communicate with your external thermal printer API server
+
+#### Statements & Reports
+
+- `GET /api/statement` - Get statements
+- `GET /api/statement/today` - Get today's statement
+- `POST /api/statement` - Create statement
+
+#### Report Timing Configuration
+
+- `GET /api/sending-time` - Get report sending time
+- `POST /api/sending-time` - Update report sending time
+
+### Backup Service (Port 3007)
 
 - `GET /` - Service status
 - `GET /config` - Get current configuration
@@ -370,11 +439,15 @@ You can manually add initial data through Prisma Studio or pgAdmin:
 - `GET /backups` - List all backups
 - `DELETE /backup/:filename` - Delete specific backup
 
-### Report Service
+### Report Service (Port 3006)
 
 - `GET /generate-report` - Generate and send report
 - `GET /run-report` - Direct execution endpoint
-- `GET /test-pdf` - Generate test PDF
+- `GET /test-pdf` - Generate test PDF (with query params)
+  - `?useTestData=true` - Use test data
+  - `?limit=5` - Limit number of orders
+  - `?includeReported=true` - Include already reported orders
+  - `?download=true` - Download PDF file
 
 ## 🚀 Deployment
 
@@ -485,6 +558,19 @@ NODE_ENV=production
    - Check database connection
    - Verify email configuration
    - Check if orders exist to report
+
+### Thermal Printer Integration Issues
+
+1. **Print API connection failed**
+
+   - Ensure your external thermal printer API server is running
+   - Check network connectivity to the print server
+   - Verify API endpoint URLs are correct
+
+2. **Print requests failing**
+   - Check API request format matches your print server expectations
+   - Verify authentication/API keys if required by your print server
+   - Review print server logs for error details
 
 ## 🤝 Contributing
 
