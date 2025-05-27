@@ -28,7 +28,7 @@ export default function Statement({ onRemove }: StatementProps) {
       const response: Response = await fetch('/api/print-route/print-bill', {
         method: 'POST',
         body: JSON.stringify({
-          statement: { ...data, date: new Date().toISOString().slice(0, 10) },
+          statement: { ...data },
         }),
       });
       if (!response.ok) {
@@ -69,12 +69,13 @@ export default function Statement({ onRemove }: StatementProps) {
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">
         <h1 className="text-2xl font-bold mb-2">
           Date:{' '}
-          {new Date().toLocaleDateString('en-US', {
-            weekday: 'long',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-          })}
+          {data.date ||
+            new Date().toLocaleDateString('en-US', {
+              weekday: 'long',
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+            })}
         </h1>
         <div className="flex justify-between items-center mb-2">
           <h2 className="text-xl font-bold ">Today&apos;s Statement</h2>
@@ -101,7 +102,7 @@ export default function Statement({ onRemove }: StatementProps) {
             onClick={onRemove}
             className="bg-red-500 text-white px-4 py-2 rounded"
           >
-            Close statement
+            Hide Statement
           </button>
         </div>
       </div>

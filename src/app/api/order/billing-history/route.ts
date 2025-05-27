@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient, Order } from '@prisma/client';
 import { startOfDay, endOfDay, subDays } from 'date-fns';
+import { localDateFunc } from '@/lib/localDateFunc';
 
 const prisma = new PrismaClient();
 
@@ -20,14 +21,21 @@ export async function GET(req: NextRequest) {
   let prevOngoingOrders: OrderWithRelations[] = [];
 
   if (dateStr) {
-    // Get all orders for the given date
+    // Get all orders for the given date in Bangladesh time
     const date = new Date(dateStr);
+
+    // Convert to Bangladesh time zone
+    const localDate = localDateFunc(date);
+    const localStartOfDay = startOfDay(localDate);
+    const localEndOfDay = endOfDay(localDate);
+    console.log(localStartOfDay, localEndOfDay);
+
     todayOrders = await prisma.order.findMany({
       where: {
         status: 'COMPLETED',
         createdAt: {
-          gte: startOfDay(date),
-          lte: endOfDay(date),
+          gte: localStartOfDay,
+          lte: localEndOfDay,
         },
       },
       include: {
@@ -39,14 +47,18 @@ export async function GET(req: NextRequest) {
   }
 
   if (prevOngoing) {
-    // Get ONGOING orders from previous day
-    const prevDay = subDays(new Date(), 1);
+    // Get ONGOING orders from previous day in Bangladesh time
+    const yesterday = subDays(new Date(), 1);
+    const localYesterday = localDateFunc(yesterday);
+    const localStartOfDay = startOfDay(localYesterday);
+    const localEndOfDay = endOfDay(localYesterday);
+
     prevOngoingOrders = await prisma.order.findMany({
       where: {
         status: 'ONGOING',
         createdAt: {
-          gte: startOfDay(prevDay),
-          lte: endOfDay(prevDay),
+          gte: localStartOfDay,
+          lte: localEndOfDay,
         },
       },
       include: {

@@ -1,13 +1,18 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import { startOfDay, endOfDay } from 'date-fns';
+import { localDateFunc } from '@/lib/localDateFunc';
 
 const prisma = new PrismaClient();
 
 export async function GET() {
+  // Get today in Bangladesh time zone
   const today = new Date();
-  const start = startOfDay(today);
-  const end = endOfDay(today);
+  const bangladeshToday = localDateFunc(today);
+  const start = startOfDay(bangladeshToday);
+  const end = endOfDay(bangladeshToday);
+
+  console.log(start, end); // Log for debugging
 
   // Get all completed orders for today
   const orders = await prisma.order.findMany({
@@ -37,5 +42,11 @@ export async function GET() {
     ([tableNumber, total]) => ({ tableNumber, total }),
   );
 
-  return NextResponse.json({ totalSale, totalOrders, tableSales });
+  return NextResponse.json({
+    totalSale,
+    totalOrders,
+    tableSales,
+    // Add formatted date in Bangladesh time for display
+    date: new Date(bangladeshToday).toLocaleDateString(),
+  });
 }

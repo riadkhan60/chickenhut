@@ -1,15 +1,20 @@
 'use client';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { PinContext } from '@/context/PinContext';
 import { getSession } from 'next-auth/react';
+import { localDateFunc } from '@/lib/localDateFunc';
 
 export default function Settings() {
-  const { adminModeOn, adminMode, clearadminMode } =
-    useContext(PinContext);
+  const { adminModeOn, adminMode, clearadminMode } = useContext(PinContext);
   const [showPinPopup, setShowPinPopup] = useState(false);
   const [pinInput, setPinInput] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [reportTime, setReportTime] = useState('20:00');
+  const [tempReportTime, setTempReportTime] = useState('20:00');
+  const [reportTimeLoading, setReportTimeLoading] = useState(true);
+  const [reportTimeError, setReportTimeError] = useState('');
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleToggle = () => {
     if (!adminModeOn) {
@@ -46,6 +51,63 @@ export default function Settings() {
     setLoading(false);
   };
 
+  useEffect(() => {
+    const currentTime = localDateFunc(new Date());
+    console.log(currentTime);
+    // Fetch current report sending time
+    setReportTimeLoading(true);
+    fetch('/api/sending-time')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.time) {
+          setReportTime(data.time);
+          setTempReportTime(data.time);
+        }
+        setReportTimeLoading(false);
+      })
+      .catch(() => {
+        setReportTimeError('Failed to load report time');
+        setReportTimeLoading(false);
+      });
+  }, []);
+
+  const handleReportTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTime = e.target.value;
+    setTempReportTime(newTime);
+  };
+
+  const saveReportTime = async () => {
+    if (tempReportTime === reportTime) return;
+
+    setReportTimeLoading(true);
+    setReportTimeError('');
+
+    try {
+      const res = await fetch('/api/sending-time', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ time: tempReportTime }),
+      });
+
+      if (!res.ok) throw new Error('Failed to update');
+      setReportTime(tempReportTime);
+      setReportTimeLoading(false);
+    } catch {
+      setReportTimeError('Failed to update report time');
+      setReportTimeLoading(false);
+    }
+  };
+
+  // Clean up timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
   return (
     <div className="p-4 rounded-lg shadow-md">
       <div className="flex items-center gap-4 mb-6">
@@ -62,6 +124,30 @@ export default function Settings() {
             {adminModeOn ? 'On' : 'Off'}
           </span>
         </label>
+      </div>
+      <div className="mb-6">
+        <label className="block font-semibold mb-2">Report Sending Time</label>
+        <div className="flex items-center gap-2">
+          <input
+            type="time"
+            value={tempReportTime}
+            onChange={handleReportTimeChange}
+            disabled={!adminModeOn || reportTimeLoading}
+            className="border p-2 rounded text-lg w-32"
+          />
+          <button
+            onClick={saveReportTime}
+            disabled={
+              !adminModeOn || reportTimeLoading || tempReportTime === reportTime
+            }
+            className="bg-blue-600 text-white px-3 py-2 rounded disabled:bg-blue-300"
+          >
+            {reportTimeLoading ? 'Saving...' : 'Save'}
+          </button>
+        </div>
+        {reportTimeError && (
+          <div className="text-red-500 text-sm mt-1">{reportTimeError}</div>
+        )}
       </div>
       {showPinPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">

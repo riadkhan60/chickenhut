@@ -76,3 +76,8 @@ model Statement {
   totalSale Float
   createdAt DateTime @default(now())
 }
+
+model ReportSendingTime {
+  id   Int    @id @default(autoincrement())
+  time String // e.g., "20:00" for 8 PM
+}

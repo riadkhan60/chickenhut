@@ -60,10 +60,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           title: t('tableList'),
           url: '/dashboard/table-list',
         },
-        {
-          title: t('billingHistory'),
-          url: '/dashboard/billing-history',
-        },
+       
       ],
     },
     {
@@ -71,6 +68,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       url: '/dashboard/statement',
       icon: PieChart,
       isActive: true,
+      items: [
+        {
+          title: t('todayTotalOrders'),
+          url: '/dashboard/statement',
+        },
+        {
+          title: t('allTotalOrders'),
+          url: '/dashboard/all-statement',
+        },
+      ],
     },
     {
       title: t('settings'),

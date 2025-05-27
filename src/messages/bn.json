@@ -12,7 +12,9 @@
     "restrurent": "রেস্টুরেন্ট",
     "tableList": "টেবিল তালিকা",
     "statement": "স্টেটমেন্ট",
-    "settings": "সেটিংস"
+    "settings": "সেটিংস",
+    "todayTotalOrders": "আজকের স্টেটমেন্ট",
+    "allTotalOrders": "সব স্টেটমেন্ট"
   },
   "signIn": {
     "title": "সাইন ইন",

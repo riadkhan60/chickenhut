@@ -12,7 +12,9 @@
     "restrurent": "Restaurant",
     "tableList": "Table List",
     "statement": "Statement",
-    "settings": "Settings"
+    "settings": "Settings",
+    "todayTotalOrders": "Today's Statement",
+    "allTotalOrders": "All Statement"
   },
   "signIn": {
     "title": "Sign In",

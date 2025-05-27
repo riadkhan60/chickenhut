@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { localDateFunc } from '@/lib/localDateFunc';
 
 const prisma = new PrismaClient();
 
@@ -26,9 +27,15 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const data = await req.json();
   const { orderItems, ...orderData } = data;
+
+  // Use Bangladesh time for createdAt and updatedAt
+  const now = localDateFunc(new Date());
+
   const order = await prisma.order.create({
     data: {
       ...orderData,
+      createdAt: now,
+      updatedAt: now,
       orderItems: {
         create: orderItems,
       },
@@ -40,10 +47,15 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   const data = await req.json();
   const { orderItems, ...orderData } = data;
+
+  // Use Bangladesh time for updatedAt
+  const now = localDateFunc(new Date());
+
   const order = await prisma.order.update({
     where: { id: orderData.id },
     data: {
       ...orderData,
+      updatedAt: now,
       orderItems: {
         deleteMany: {},
         create: orderItems,
