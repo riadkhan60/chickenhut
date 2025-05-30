@@ -123,7 +123,7 @@ export default function OngoingOrdersList({
               <div className="text-xs sm:text-sm text-muted-foreground dark:text-gray-400 space-y-1">
                 {order.orderItems.length > 0 ? (
                   order.orderItems.slice(0, 3).map((oi: any) => (
-                    <div key={oi.id} className="truncate">
+                    <div key={oi.id} className="truncate font-semibold text-black">
                       {oi.menuItem?.itemNumber
                         ? `${oi.menuItem.itemNumber} - `
                         : ''}
@@ -138,7 +138,7 @@ export default function OngoingOrdersList({
                 )}
               </div>
               <div className="font-bold mt-auto pt-2 text-right text-base sm:text-lg text-gray-700 dark:text-gray-200">
-                {t('total')}: tk{Number(order.total).toFixed(2)}
+                {t('total')}: Tk.{Number(order.total).toFixed(0)}
               </div>
             </Card>
           ))

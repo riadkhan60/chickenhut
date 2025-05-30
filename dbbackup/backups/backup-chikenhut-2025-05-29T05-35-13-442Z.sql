@@ -391,6 +391,13 @@ COPY public."Order" (id, "tableId", "isParcel", status, discount, total, paid, "
 69	3	f	COMPLETED	0	1000	t	2025-05-22 00:19:02.04	2025-05-22 00:20:31.019	2025-05-22 00:20:31.016	f	t	t
 57	1	f	COMPLETED	0	500	t	2025-05-20 21:52:17.351	2025-05-22 00:02:33.791	2025-05-22 00:02:33.786	f	t	t
 67	2	f	COMPLETED	0	1860	t	2025-05-21 23:48:31.824	2025-05-21 23:48:41.873	2025-05-21 23:48:41.872	t	t	t
+70	1	f	COMPLETED	0	1000	t	2025-05-28 16:50:53.228	2025-05-28 16:50:57.013	2025-05-28 16:50:57.011	t	t	t
+71	2	f	COMPLETED	0	12500	t	2025-05-28 16:51:27.706	2025-05-28 16:51:39.903	2025-05-28 16:51:39.901	t	t	t
+72	3	f	COMPLETED	0	6500	t	2025-05-28 16:51:38.082	2025-05-28 16:51:41.431	2025-05-28 16:51:41.43	t	t	t
+73	2	f	COMPLETED	0	130	f	2025-05-28 17:23:44.67	2025-05-28 17:23:46.858	\N	f	f	f
+74	3	f	COMPLETED	0	130	f	2025-05-28 17:25:09.874	2025-05-28 17:25:09.874	\N	f	f	f
+75	5	f	COMPLETED	0	8200	f	2025-05-28 17:29:17.799	2025-05-28 17:29:20.835	\N	f	f	f
+76	4	f	COMPLETED	0	20400	f	2025-05-28 17:42:07.856	2025-05-28 17:42:07.856	\N	f	f	f
 60	2	f	COMPLETED	0	1000	f	2025-05-21 21:56:44.651	2025-05-21 21:56:44.651	2025-05-21 22:04:09.087	f	f	t
 61	1	f	COMPLETED	0	2500	f	2025-05-21 22:04:09.087	2025-05-21 22:04:09.087	2025-05-21 22:04:09.087	f	f	t
 59	1	f	COMPLETED	0	900	f	2025-05-21 21:55:39.294	2025-05-21 21:55:39.294	2025-05-21 22:04:09.087	f	f	t
@@ -415,6 +422,19 @@ COPY public."OrderItem" (id, "orderId", "menuItemId", quantity, price) FROM stdi
 243	68	2	2	700
 244	68	7	3	5500
 245	69	5	2	500
+247	70	6	2	500
+252	71	7	2	5500
+253	71	6	3	500
+254	72	6	2	500
+255	72	7	1	5500
+257	73	1	1	130
+258	74	1	1	130
+262	75	6	4	500
+263	75	2	6	700
+264	75	5	4	500
+265	76	2	2	700
+266	76	6	5	500
+267	76	7	3	5500
 \.
 
 
@@ -423,7 +443,7 @@ COPY public."OrderItem" (id, "orderId", "menuItemId", quantity, price) FROM stdi
 --
 
 COPY public."ReportSendingTime" (id, "time") FROM stdin;
-1	06:47
+1	23:47
 \.
 
 
@@ -480,14 +500,14 @@ SELECT pg_catalog.setval('public."MenuItem_id_seq"', 7, true);
 -- Name: OrderItem_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public."OrderItem_id_seq"', 245, true);
+SELECT pg_catalog.setval('public."OrderItem_id_seq"', 267, true);
 
 
 --
 -- Name: Order_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public."Order_id_seq"', 69, true);
+SELECT pg_catalog.setval('public."Order_id_seq"', 76, true);
 
 
 --

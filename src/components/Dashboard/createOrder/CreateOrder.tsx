@@ -539,7 +539,7 @@ export default function CreateOrder({
                 isSubmitting ||
                 isLoadingTables
               }
-              className={`transition-colors duration-200 text-lg p-2 ${
+              className={`transition-colors duration-200 font-semibold  text-lg p-2 ${
                 hasOngoingOrderForTable ? 'bg-red-100 border-red-500' : ''
               }`}
               aria-label="Table number"
@@ -582,7 +582,7 @@ export default function CreateOrder({
                 isLoadingMenuItems ||
                 (!isParcel && !tableId && !tableInput.trim())
               } // Enable if isParcel or table is selected
-              className="transition-colors duration-200 text-lg p-2"
+              className="transition-colors duration-200 font-semibold text-lg p-2"
               aria-label="Add menu item by number or name"
               title="Type the item number or name, then press Enter to add"
             />
@@ -624,7 +624,7 @@ export default function CreateOrder({
                   saveButton?.focus();
                 }
               }}
-              className="transition-colors duration-200 dark:bg-gray-700 dark:text-white text-lg p-2"
+              className="transition-colors duration-200 dark:bg-gray-900 dark:text-white font-semibold text-lg p-2"
               placeholder="0.00"
               aria-label={t('discountInDollars')}
               title={t('discountTitle')}
@@ -646,10 +646,11 @@ export default function CreateOrder({
               <div className="w-12 text-center text-xs whitespace-nowrap">
                 Item No
               </div>
-              <div className="flex-1 min-w-0">Item Name</div>
-              <div className="w-24 text-center">Quantity</div>
-              <div className="w-28 text-right">Price</div>
-              <div className="w-14"></div>
+              <div className="flex-grow min-w-0">Item Name</div>
+              <div className="w-12 text-center">Quantity</div>
+              <div className="w-20 text-right">Price</div>
+              <div className="w-20 text-right">Total</div>
+              <div className="w-12"></div>
             </div>
             {/* End Header Row */}
             {items.map((item, index) => (
@@ -664,48 +665,53 @@ export default function CreateOrder({
                     : 'bg-white dark:bg-gray-700/50 border'
                 }`}
               >
-                <div className="w-12 text-center font-mono text-gray-700 dark:text-gray-200">
+                <div className="w-12 text-center font-mono text-gray-900 dark:text-gray-200">
                   {item.itemNumber}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <span className="font-medium text-gray-800 dark:text-gray-100">
+                <div className="flex-grow min-w-0">
+                  <span className="font-medium text-gray-800 dark:text-gray-100 text-sm ">
                     {item.name}
                   </span>
                 </div>
-                <div className="w-24 flex items-center justify-center">
-                  <label
-                    htmlFor={`quantity-${item.menuItemId}`}
-                    className="sr-only"
-                  >
-                    Quantity for {item.name}
-                  </label>
-                  <Input
-                    id={`quantity-${item.menuItemId}`}
-                    type="number"
-                    min={1}
-                    aria-label={`Quantity for ${item.name}`}
-                    className="w-full border rounded p-2 text-center text-lg focus:ring-2 focus:ring-primary dark:bg-gray-600 dark:text-white"
-                    value={item.quantity}
-                    disabled={isEffectivelyCompleted || isSubmitting}
-                    onChange={(e) =>
-                      handleItemChange(
-                        item.menuItemId,
-                        'quantity',
-                        Number(e.target.value),
-                      )
-                    }
-                    onKeyDown={(e) => handleItemQuantityKeyDown(e, index)}
-                    onFocus={(e) => e.target.select()}
-                    ref={(el) => {
-                      itemQuantityInputRefs.current[index] = el;
-                    }}
-                  />
+                <div className="w-12 flex items-center justify-center">
+                  <div className="w-full text-center">
+                    <label
+                      htmlFor={`quantity-${item.menuItemId}`}
+                      className="sr-only"
+                    >
+                      Quantity for {item.name}
+                    </label>
+                    <Input
+                      id={`quantity-${item.menuItemId}`}
+                      type="number"
+                      min={1}
+                      aria-label={`Quantity for ${item.name}`}
+                      className="w-full border rounded p-2 text-center text-lg focus:ring-2 focus:ring-black font-semibold dark:bg-gray-900 dark:text-white"
+                      value={item.quantity}
+                      disabled={isEffectivelyCompleted || isSubmitting}
+                      onChange={(e) =>
+                        handleItemChange(
+                          item.menuItemId,
+                          'quantity',
+                          Number(e.target.value),
+                        )
+                      }
+                      onKeyDown={(e) => handleItemQuantityKeyDown(e, index)}
+                      onFocus={(e) => e.target.select()}
+                      ref={(el) => {
+                        itemQuantityInputRefs.current[index] = el;
+                      }}
+                    />
+                  </div>
                 </div>
-                <div className="w-28 text-right font-mono text-lg text-gray-800 dark:text-gray-100">
-                  {item.price.toFixed(2)}
+                <div className="w-20 text-right font-mono text-lg text-gray-800 dark:text-gray-100">
+                  {Math.round(item.price)}
+                </div>
+                <div className="w-20 text-right font-mono text-lg text-gray-800 dark:text-gray-100">
+                  {Math.round(item.price * item.quantity)}
                 </div>
                 {!isEffectivelyCompleted && !isSubmitting && (
-                  <div className="w-14 flex justify-end">
+                  <div className="w-12 flex justify-end">
                     <Button
                       size="icon"
                       className="bg-red-600 hover:bg-red-700 text-white"
